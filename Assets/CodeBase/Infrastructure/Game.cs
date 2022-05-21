@@ -13,5 +13,6 @@ namespace CodeBase.Infrastructure
     {
       StateMachine = new GameStateMachine(new SceneLoader(coroutineRunner), AllServices.Container);
     }
+    public void Tick() => StateMachine.Tick();
   }
 }

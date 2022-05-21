@@ -2,6 +2,7 @@
 using CodeBase.Data;
 using CodeBase.Infrastructure.Factory;
 using CodeBase.Logic;
+using CodeBase.Services.Input;
 using CodeBase.Services.PersistentProgress;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -17,14 +18,16 @@ namespace CodeBase.Infrastructure.States
     private readonly SceneLoader _sceneLoader;
     private readonly IGameFactory _gameFactory;
     private readonly IPersistentProgressService _progressService;
+    private readonly IInputService _inputService;
 
     public LoadLevelState(GameStateMachine gameStateMachine, SceneLoader sceneLoader, 
-      IGameFactory gameFactory, IPersistentProgressService progressService)
+      IGameFactory gameFactory, IPersistentProgressService progressService, IInputService inputService)
     {
       _stateMachine = gameStateMachine;
       _sceneLoader = sceneLoader;
       _gameFactory = gameFactory;
       _progressService = progressService;
+      _inputService = inputService;
     }
 
     public void Enter(string sceneName)
@@ -51,7 +54,29 @@ namespace CodeBase.Infrastructure.States
 
     private void InitGameWorld()
     {
-      
+      CreateAttackTower();
+      CreateEnemySpawners();
+    }
+
+    private void CreateAttackTower()
+    {
+      GameObject attackTowerPoint = GameObject.Find("AttackTowerSpawnPoint");
+      AttackTower attackTower = _gameFactory.CreateAttackTower(attackTowerPoint.transform.position);
+      attackTower.Construct(_gameFactory, _inputService);
+    }
+
+    private void CreateEnemySpawners()
+    {
+      Vector3 minEnemySpawnerPosition = GameObject.Find("MinEnemySpawnPoint").transform.position;
+      Vector3 maxEnemySpawnerPosition = GameObject.Find("MaxEnemySpawnPoint").transform.position;
+
+      float howManySpawners = 8;
+      float positionStep = (maxEnemySpawnerPosition.x - minEnemySpawnerPosition.x) / howManySpawners;
+
+      for (int i = 0; i <= howManySpawners; i++)
+      {
+        _gameFactory.CreateEnemySpawner(minEnemySpawnerPosition + new Vector3(positionStep * i, 0, 0));
+      }
     }
   }
 }

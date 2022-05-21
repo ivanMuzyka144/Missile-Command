@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using CodeBase.Infrastructure.Factory;
 using CodeBase.Logic;
 using CodeBase.Services;
+using CodeBase.Services.Input;
 using CodeBase.Services.PersistentProgress;
 using CodeBase.Services.SaveLoad;
 
@@ -18,9 +19,10 @@ namespace CodeBase.Infrastructure.States
       _states = new Dictionary<Type, IExitableState>
       {
         [typeof(BootstrapState)] = new BootstrapState(this, sceneLoader, services),
-        [typeof(LoadLevelState)] = new LoadLevelState(this, sceneLoader, services.Single<IGameFactory>(), services.Single<IPersistentProgressService>()),
+        [typeof(LoadLevelState)] = new LoadLevelState(this, sceneLoader, services.Single<IGameFactory>(), 
+          services.Single<IPersistentProgressService>(), services.Single<IInputService>()),
         [typeof(LoadProgressState)] = new LoadProgressState(this, services.Single<IPersistentProgressService>(), services.Single<ISaveLoadService>()),
-        [typeof(GameLoopState)] = new GameLoopState(this),
+        [typeof(GameLoopState)] = new GameLoopState(this, services.Single<IInputService>()),
       };
     }
     
@@ -34,6 +36,12 @@ namespace CodeBase.Infrastructure.States
     {
       TState state = ChangeState<TState>();
       state.Enter(payload);
+    }
+
+    public void Tick()
+    {
+      if (_activeState is IUpdatable) 
+        ((IUpdatable)_activeState).Tick();
     }
 
     private TState ChangeState<TState>() where TState : class, IExitableState
