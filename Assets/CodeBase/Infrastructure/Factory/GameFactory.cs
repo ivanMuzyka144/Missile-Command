@@ -46,9 +46,9 @@ namespace CodeBase.Infrastructure.Factory
       EnemySpawners.Add(enemySpawner);
       return enemySpawner;
     }
-    public Enemy CreateEnemy(Vector3 at) =>
+    public EnemyBody CreateEnemy(Vector3 at) =>
       _assets.Instantiate(path: AssetPath.EnemyPath, at: at)
-        .GetComponent<Enemy>();
+        .GetComponent<EnemyBody>();
 
     public PlayerHouse CreatePlayerHouse(Vector3 at) =>
       _assets.Instantiate(path: AssetPath.PlayerHousePath, at: at)

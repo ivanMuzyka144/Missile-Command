@@ -1,38 +1,57 @@
+using System;
 using System.Collections;
+using CodeBase.Logic.Enemy;
 using DG.Tweening;
+using DG.Tweening.Core;
+using DG.Tweening.Plugins.Options;
 using UnityEngine;
+
+using Random = UnityEngine.Random;
 
 namespace CodeBase.Logic.AttackTower
 {
   public class Explosion : MonoBehaviour
   {
-    [SerializeField] private float _explosionTime = 1;
+    [SerializeField] private float _minScale = 1.5f;
+    [SerializeField] private float _maxScale = 1.5f;
+    [SerializeField] private float _scaleTime = 1.25f;
+    [SerializeField] private float _fadeTime = 0.5f;
+    [Space(10)]
     [SerializeField] private Color _finishColor;
     [SerializeField] private SpriteRenderer _spriteRenderer;
     
     public void PerformExplosion()
     {
-      ScaleExplosion();
-      AnimExplosionColor();
-      StartCoroutine(CO_DestroyTimer());
-    }
-
-    private void ScaleExplosion()
-    {
       transform.localScale = Vector3.zero;
-      transform.DOScale(Vector3.one * Random.Range(1, 1.75f), _explosionTime)
-               .SetEase(Ease.Linear);
+      
+      Sequence explosionSequence = DOTween.Sequence();
+      explosionSequence.Append(ScaleTween());
+      explosionSequence.Insert(0,ChangeColorTween());
+      explosionSequence.Append(FadeTween());
+      explosionSequence.OnComplete(DestroyExplosion);
     }
 
-    private void AnimExplosionColor() => 
-      _spriteRenderer.DOColor(_finishColor, _explosionTime);
+    private TweenerCore<Vector3, Vector3, VectorOptions> ScaleTween() => 
+      transform.DOScale(GetScale(), _scaleTime).SetEase(Ease.Linear);
 
-    private IEnumerator CO_DestroyTimer()
+    private TweenerCore<Color, Color, ColorOptions> ChangeColorTween() => 
+      _spriteRenderer.DOColor(_finishColor, _scaleTime);
+
+    private TweenerCore<Color, Color, ColorOptions> FadeTween() => 
+      _spriteRenderer.DOFade(0, _fadeTime);
+
+
+    private Vector3 GetScale() => 
+      Vector3.one * Random.Range(_minScale, _maxScale);
+
+    private void DestroyExplosion()
     {
-      yield return new WaitForSeconds(_explosionTime);
       _spriteRenderer.DOKill();
       transform.DOKill();
       Destroy(gameObject);
     }
+
+    private void OnTriggerEnter2D(Collider2D col) => 
+      col.gameObject.GetComponent<EnemyBody>().DestroyEnemy();
   }
 }

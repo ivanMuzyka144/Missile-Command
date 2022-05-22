@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3107201480762383527}
   - component: {fileID: 6778966653814533314}
   - component: {fileID: 895439177017742817}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Explosion
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -98,7 +98,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6efa3d00f3f644d50afecbd19bc4dcea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _explosionTime: 1.25
+  _minScale: 1.5
+  _maxScale: 1.5
+  _scaleTime: 1.25
+  _fadeTime: 0.5
   _finishColor: {r: 1, g: 0.1745283, b: 0.1745283, a: 1}
   _spriteRenderer: {fileID: 3107201480762383527}
 --- !u!58 &895439177017742817

@@ -13,11 +13,11 @@ namespace CodeBase.Logic.Enemy
     }
     public void SpawnEnemy()
     {
-      Enemy enemy = _factory.CreateEnemy(transform.position);
+      EnemyBody enemyBody = _factory.CreateEnemy(transform.position);
       Vector3 rotationVector = new Vector3(0, 0, 180 + Random.Range(-10,10));
       Vector3 directionVector = GetDirectionVector(rotationVector);
-      enemy.Construct(directionVector);
-      enemy.transform.eulerAngles = rotationVector;
+      enemyBody.Construct(directionVector);
+      enemyBody.transform.eulerAngles = rotationVector;
     }
 
     private Vector3 GetDirectionVector(Vector3 rotationVector)

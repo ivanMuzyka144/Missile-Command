@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace CodeBase.Logic.Enemy
 {
-  public class Enemy : MonoBehaviour
+  public class EnemyBody : MonoBehaviour
   {
     [SerializeField] private float _velocity;
 
@@ -23,5 +23,10 @@ namespace CodeBase.Logic.Enemy
 
     private void Move() => 
       transform.position += (Vector3)(_direction * _velocity * Time.deltaTime);
+
+    public void DestroyEnemy()
+    {
+      Destroy(gameObject);
+    }
   }
 }

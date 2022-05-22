@@ -19,7 +19,7 @@ namespace CodeBase.Infrastructure.Factory
     Rocket CreateRocket(Vector3 at);
     Explosion CreateExplosion(Vector3 at);
     EnemySpawner CreateEnemySpawner(Vector3 at);
-    Enemy CreateEnemy(Vector3 at);
+    EnemyBody CreateEnemy(Vector3 at);
     PlayerHouse CreatePlayerHouse(Vector3 at);
   }
 }

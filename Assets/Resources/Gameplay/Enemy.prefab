@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1554730908400978811}
   - component: {fileID: 1554730908400978808}
   - component: {fileID: 7084424583238330677}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Enemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -96,7 +96,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1554730908886086337}
   - component: {fileID: 1554730908886086342}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: diamond_sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -181,7 +181,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4188654805347758407}
   - component: {fileID: 6687781876252932033}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Tail
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -321,7 +321,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4277192312456321888}
   - component: {fileID: 5562842128317696400}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: circle_sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
