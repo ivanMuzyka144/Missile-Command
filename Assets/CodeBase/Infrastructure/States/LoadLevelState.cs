@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using CodeBase.Data;
 using CodeBase.Infrastructure.Factory;
 using CodeBase.Logic;
+using CodeBase.Logic.AttackTower;
 using CodeBase.Services.Input;
 using CodeBase.Services.PersistentProgress;
 using UnityEngine;
@@ -55,7 +57,18 @@ namespace CodeBase.Infrastructure.States
     private void InitGameWorld()
     {
       CreateAttackTower();
+      CreatePlayerHouses();
       CreateEnemySpawners();
+    }
+
+    private void CreatePlayerHouses()
+    {
+      var spawnPositions = GameObject.FindGameObjectsWithTag("PlayerHousePoint")
+                                                       .Select(x => x.transform.position);
+      foreach (var positions in spawnPositions)
+      {
+        PlayerHouse house = _gameFactory.CreatePlayerHouse(positions);
+      }
     }
 
     private void CreateAttackTower()

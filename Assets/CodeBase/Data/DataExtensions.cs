@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace CodeBase.Data
@@ -11,6 +12,9 @@ namespace CodeBase.Data
       return vector;
     }
     
+    public static T RandomItem<T>(this List<T> list) => 
+      list[Random.Range(0,list.Count)];
+
     public static Vector2 ToVector2(this Vector3 vector3) => 
       new Vector2(vector3.x, vector3.y);
     

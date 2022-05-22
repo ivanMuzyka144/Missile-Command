@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using CodeBase.Infrastructure.AssetManagement;
 using CodeBase.Logic.AttackTower;
+using CodeBase.Logic.Enemy;
 using CodeBase.Services.PersistentProgress;
 using UnityEngine;
 
@@ -41,9 +42,17 @@ namespace CodeBase.Infrastructure.Factory
     {
       EnemySpawner enemySpawner = _assets.Instantiate(path: AssetPath.EnemySpawnerPath, at: at)
         .GetComponent<EnemySpawner>();
+      enemySpawner.Construct(this);
       EnemySpawners.Add(enemySpawner);
       return enemySpawner;
     }
+    public Enemy CreateEnemy(Vector3 at) =>
+      _assets.Instantiate(path: AssetPath.EnemyPath, at: at)
+        .GetComponent<Enemy>();
+
+    public PlayerHouse CreatePlayerHouse(Vector3 at) =>
+      _assets.Instantiate(path: AssetPath.PlayerHousePath, at: at)
+        .GetComponent<PlayerHouse>();
 
     public void Register(ISavedProgressReader progressReader)
     {

@@ -1,18 +1,30 @@
-using System.Collections;
-using System.Collections.Generic;
+using CodeBase.Infrastructure.Factory;
 using UnityEngine;
 
-public class EnemySpawner : MonoBehaviour
+namespace CodeBase.Logic.Enemy
 {
-    // Start is called before the first frame update
-    void Start()
+  public class EnemySpawner : MonoBehaviour
+  {
+    private IGameFactory _factory;
+
+    public void Construct(IGameFactory factory)
     {
-        
+      _factory = factory;
+    }
+    public void SpawnEnemy()
+    {
+      Enemy enemy = _factory.CreateEnemy(transform.position);
+      Vector3 rotationVector = new Vector3(0, 0, 180 + Random.Range(-10,10));
+      Vector3 directionVector = GetDirectionVector(rotationVector);
+      enemy.Construct(directionVector);
+      enemy.transform.eulerAngles = rotationVector;
     }
 
-    // Update is called once per frame
-    void Update()
+    private Vector3 GetDirectionVector(Vector3 rotationVector)
     {
-        
+      Quaternion rotation = Quaternion.Euler(rotationVector);
+      Vector3 myVector = new Vector3(0,1,0);
+      return rotation * myVector;
     }
+  }
 }
