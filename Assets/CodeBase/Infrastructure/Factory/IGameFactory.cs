@@ -1,6 +1,6 @@
 using System.Collections.Generic;
-using CodeBase.Logic.AttackTower;
 using CodeBase.Logic.Enemy;
+using CodeBase.Logic.Player;
 using CodeBase.Services;
 using CodeBase.Services.PersistentProgress;
 using CodeBase.StaticData;
@@ -17,7 +17,8 @@ namespace CodeBase.Infrastructure.Factory
 
     AttackTower CreateAttackTower(Vector3 at);
     Rocket CreateRocket(Vector3 at);
-    Explosion CreateExplosion(Vector3 at);
+    Explosion CreatePlayerExplosion(Vector3 at);
+    Explosion CreateEnemyExplosion(Vector3 at);
     EnemySpawner CreateEnemySpawner(Vector3 at);
     EnemyBody CreateEnemy(Vector3 at);
     PlayerHouse CreatePlayerHouse(Vector3 at);

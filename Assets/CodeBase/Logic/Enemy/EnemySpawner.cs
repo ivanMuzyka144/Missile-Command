@@ -16,7 +16,7 @@ namespace CodeBase.Logic.Enemy
       EnemyBody enemyBody = _factory.CreateEnemy(transform.position);
       Vector3 rotationVector = new Vector3(0, 0, 180 + Random.Range(-10,10));
       Vector3 directionVector = GetDirectionVector(rotationVector);
-      enemyBody.Construct(directionVector);
+      enemyBody.Construct(_factory,directionVector);
       enemyBody.transform.eulerAngles = rotationVector;
     }
 

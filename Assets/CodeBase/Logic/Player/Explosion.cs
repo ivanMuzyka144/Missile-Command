@@ -1,14 +1,11 @@
-using System;
-using System.Collections;
 using CodeBase.Logic.Enemy;
 using DG.Tweening;
 using DG.Tweening.Core;
 using DG.Tweening.Plugins.Options;
 using UnityEngine;
-
 using Random = UnityEngine.Random;
 
-namespace CodeBase.Logic.AttackTower
+namespace CodeBase.Logic.Player
 {
   public class Explosion : MonoBehaviour
   {
@@ -50,8 +47,11 @@ namespace CodeBase.Logic.AttackTower
       transform.DOKill();
       Destroy(gameObject);
     }
-
-    private void OnTriggerEnter2D(Collider2D col) => 
-      col.gameObject.GetComponent<EnemyBody>().DestroyEnemy();
+    
+    private void OnTriggerEnter2D(Collider2D col)
+    {
+      if (col.TryGetComponent(out IHittable hittable)) 
+        hittable.Hit();
+    }
   }
 }

@@ -3,7 +3,7 @@ using System.Linq;
 using CodeBase.Data;
 using CodeBase.Infrastructure.Factory;
 using CodeBase.Logic;
-using CodeBase.Logic.AttackTower;
+using CodeBase.Logic.Player;
 using CodeBase.Services.Input;
 using CodeBase.Services.PersistentProgress;
 using UnityEngine;

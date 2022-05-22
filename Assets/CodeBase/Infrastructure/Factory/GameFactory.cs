@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using CodeBase.Infrastructure.AssetManagement;
-using CodeBase.Logic.AttackTower;
 using CodeBase.Logic.Enemy;
+using CodeBase.Logic.Player;
 using CodeBase.Services.PersistentProgress;
 using UnityEngine;
 
@@ -11,11 +11,14 @@ namespace CodeBase.Infrastructure.Factory
   {
     public List<ISavedProgressReader> ProgressReaders { get; } = new List<ISavedProgressReader>();
     public List<ISavedProgress> ProgressWriters { get; } = new List<ISavedProgress>();
-    
     public List<EnemySpawner> EnemySpawners { get; } = new List<EnemySpawner>();
 
     private readonly IAssetProvider _assets;
     private readonly IPersistentProgressService _persistentProgressService;
+    
+    private const string PlayerExplosionLayerName = "PlayerExplosion";
+    private const string EnemyExplosionLayerName = "EnemyExplosion";
+    
     public GameFactory(IAssetProvider assets, IPersistentProgressService persistentProgressService)
     {
       _assets = assets;
@@ -34,9 +37,18 @@ namespace CodeBase.Infrastructure.Factory
       return rocket;
     }
 
-    public Explosion CreateExplosion(Vector3 at) =>
-      _assets.Instantiate(path: AssetPath.ExplosionPath, at: at)
-        .GetComponent<Explosion>();
+    public Explosion CreatePlayerExplosion(Vector3 at)
+    {
+      GameObject playerExplosion = _assets.Instantiate(path: AssetPath.ExplosionPath, at: at);
+      playerExplosion.layer = LayerMask.NameToLayer(PlayerExplosionLayerName);
+      return playerExplosion.GetComponent<Explosion>();
+    }
+    public Explosion CreateEnemyExplosion(Vector3 at)
+    {
+      GameObject enemyExplosion = _assets.Instantiate(path: AssetPath.ExplosionPath, at: at);
+      enemyExplosion.layer = LayerMask.NameToLayer(EnemyExplosionLayerName);
+      return enemyExplosion.GetComponent<Explosion>();
+    }
 
     public EnemySpawner CreateEnemySpawner(Vector3 at)
     {

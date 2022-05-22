@@ -1,4 +1,4 @@
-namespace CodeBase.Logic.AttackTower
+namespace CodeBase.Logic.Player
 {
   public class AmmunitionPresenter
   {

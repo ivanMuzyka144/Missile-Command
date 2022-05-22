@@ -99,9 +99,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _minScale: 1.5
-  _maxScale: 1.5
-  _scaleTime: 1.25
-  _fadeTime: 0.5
+  _maxScale: 2.5
+  _scaleTime: 1
+  _fadeTime: 0.75
   _finishColor: {r: 1, g: 0.1745283, b: 0.1745283, a: 1}
   _spriteRenderer: {fileID: 3107201480762383527}
 --- !u!58 &895439177017742817
