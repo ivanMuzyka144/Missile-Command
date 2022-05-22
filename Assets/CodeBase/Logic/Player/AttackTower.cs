@@ -18,20 +18,12 @@ namespace CodeBase.Logic.Player
       private bool _canFire;
    
    
-      public void Construct(IGameFactory factory, IInputService inputService)
+      public void Construct(IGameFactory factory)
       {
          _factory = factory;
-         _inputService = inputService;
-
-         _inputService.OnMouseMoved += RotateCanonTo;
-         _inputService.OnMouseClicked += Shoot;
-
          _canFire = true;
       }
-
-      private void OnDestroy() => 
-         _inputService.OnMouseClicked -= RotateCanonTo;
-
+      
       public void Shoot(Vector2 mousePosition)
       {
          if (!_canFire)

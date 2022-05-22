@@ -56,7 +56,7 @@ namespace CodeBase.Infrastructure.States
 
     private void InitGameWorld()
     {
-      CreateAttackTower();
+      CreateAttackTowerManager();
       CreatePlayerHouses();
       CreateEnemySpawners();
     }
@@ -71,11 +71,14 @@ namespace CodeBase.Infrastructure.States
       }
     }
 
-    private void CreateAttackTower()
+    private void CreateAttackTowerManager()
     {
-      GameObject attackTowerPoint = GameObject.Find("AttackTowerSpawnPoint");
-      AttackTower attackTower = _gameFactory.CreateAttackTower(attackTowerPoint.transform.position);
-      attackTower.Construct(_gameFactory, _inputService);
+      Vector3[] attackTowerPoints = GameObject.FindGameObjectsWithTag("AttackTowerSpawnPoint")
+                                              .Select(x => x.transform.position)
+                                              .ToArray();
+      AttackTowerManager attackTowerManager = _gameFactory.CreateAttackTowerManager();
+      attackTowerManager.Construct(_gameFactory, _inputService);
+      attackTowerManager.SetupTowers(attackTowerPoints);
     }
 
     private void CreateEnemySpawners()

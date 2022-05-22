@@ -8,5 +8,6 @@ namespace CodeBase.Infrastructure.AssetManagement
     public const string EnemySpawnerPath = "Gameplay/EnemySpawner";
     public const string EnemyPath = "Gameplay/Enemy";
     public const string PlayerHousePath = "Gameplay/PlayerHouse";
+    public const string AttackTowerManagerPath = "Gameplay/AttackTowerManager";
   }
 }

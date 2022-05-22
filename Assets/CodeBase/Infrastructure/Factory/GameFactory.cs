@@ -12,6 +12,8 @@ namespace CodeBase.Infrastructure.Factory
     public List<ISavedProgressReader> ProgressReaders { get; } = new List<ISavedProgressReader>();
     public List<ISavedProgress> ProgressWriters { get; } = new List<ISavedProgress>();
     public List<EnemySpawner> EnemySpawners { get; } = new List<EnemySpawner>();
+    
+    public List<AttackTower> AttackTowers { get; }= new List<AttackTower>();
 
     private readonly IAssetProvider _assets;
     private readonly IPersistentProgressService _persistentProgressService;
@@ -25,9 +27,17 @@ namespace CodeBase.Infrastructure.Factory
       _persistentProgressService = persistentProgressService;
     }
 
-    public AttackTower CreateAttackTower(Vector3 at) => 
-      _assets.Instantiate(path: AssetPath.AttackTowerPath, at: at)
-             .GetComponent<AttackTower>();
+    public AttackTowerManager CreateAttackTowerManager() => 
+      _assets.Instantiate(AssetPath.AttackTowerManagerPath).GetComponent<AttackTowerManager>();
+
+    public AttackTower CreateAttackTower(Vector3 at)
+    {
+      AttackTower attackTower = _assets.Instantiate(path: AssetPath.AttackTowerPath, at: at)
+        .GetComponent<AttackTower>();
+      AttackTowers.Add(attackTower);
+      attackTower.Construct(this);
+      return attackTower;
+    }
 
     public Rocket CreateRocket(Vector3 at)
     {

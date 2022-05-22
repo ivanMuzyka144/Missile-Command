@@ -13,8 +13,9 @@ namespace CodeBase.Infrastructure.Factory
     List<ISavedProgressReader> ProgressReaders { get; }
     List<ISavedProgress> ProgressWriters { get; }
     List<EnemySpawner> EnemySpawners { get; }
+    List<AttackTower> AttackTowers { get; }
     void Cleanup();
-
+    AttackTowerManager CreateAttackTowerManager();
     AttackTower CreateAttackTower(Vector3 at);
     Rocket CreateRocket(Vector3 at);
     Explosion CreatePlayerExplosion(Vector3 at);
