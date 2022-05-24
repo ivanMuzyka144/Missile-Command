@@ -10,11 +10,13 @@ namespace CodeBase.Logic.Player
   {
     private IGameFactory _factory;
     private IInputService _inputService;
+    private TowersData _towersData;
 
-    public void Construct(IGameFactory factory, IInputService inputService)
+    public void Construct(IGameFactory factory, IInputService inputService, TowersData towersData)
     {
       _factory = factory;
       _inputService = inputService;
+      _towersData = towersData;
       _inputService.OnMouseMoved += MouseMoved;
       _inputService.OnMouseClicked += MouseClicked;
     }
@@ -65,8 +67,13 @@ namespace CodeBase.Logic.Player
 
     public void SetupTowers(Vector3[] towerPositions)
     {
-      foreach (Vector3 position in towerPositions) 
-        _factory.CreateAttackTower(position);
+      int ammoCount = 20;
+      
+      for (int i = 0; i < towerPositions.Length; i++)
+      {
+        AttackTower attackTower = _factory.CreateAttackTower(towerPositions[i], i);
+        _towersData.AddTower(i, ammoCount);
+      }
     }
     
     

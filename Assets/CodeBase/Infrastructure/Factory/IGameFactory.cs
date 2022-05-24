@@ -16,12 +16,12 @@ namespace CodeBase.Infrastructure.Factory
     List<AttackTower> AttackTowers { get; }
     void Cleanup();
     AttackTowerManager CreateAttackTowerManager();
-    AttackTower CreateAttackTower(Vector3 at);
+    AttackTower CreateAttackTower(Vector3 at, int towerId);
     Rocket CreateRocket(Vector3 at);
     Explosion CreatePlayerExplosion(Vector3 at);
     Explosion CreateEnemyExplosion(Vector3 at);
-    EnemySpawner CreateEnemySpawner(Vector3 at);
-    EnemyBody CreateEnemy(Vector3 at);
+    EnemySpawner CreateEnemySpawner(Vector3 at, Vector3 deadLinePosition);
+    EnemyBody CreateEnemy(Vector3 at, Vector3 deadLinePosition);
     PlayerHouse CreatePlayerHouse(Vector3 at);
   }
 }

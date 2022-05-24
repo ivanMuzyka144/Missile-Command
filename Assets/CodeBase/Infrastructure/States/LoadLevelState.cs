@@ -42,10 +42,17 @@ namespace CodeBase.Infrastructure.States
 
     private void OnLoaded()
     {
+      SetBorderToInputService();
       InitGameWorld();
       InformProgressReaders();
 
       _stateMachine.Enter<GameLoopState>();
+    }
+
+    private void SetBorderToInputService()
+    {
+      Vector3 mouseRecordLine = GameObject.Find("MouseRecordLine").transform.position;
+      _inputService.SetBorder(mouseRecordLine);
     }
 
     private void InformProgressReaders()
@@ -76,8 +83,8 @@ namespace CodeBase.Infrastructure.States
       Vector3[] attackTowerPoints = GameObject.FindGameObjectsWithTag("AttackTowerSpawnPoint")
                                               .Select(x => x.transform.position)
                                               .ToArray();
+      
       AttackTowerManager attackTowerManager = _gameFactory.CreateAttackTowerManager();
-      attackTowerManager.Construct(_gameFactory, _inputService);
       attackTowerManager.SetupTowers(attackTowerPoints);
     }
 
@@ -85,13 +92,15 @@ namespace CodeBase.Infrastructure.States
     {
       Vector3 minEnemySpawnerPosition = GameObject.Find("MinEnemySpawnPoint").transform.position;
       Vector3 maxEnemySpawnerPosition = GameObject.Find("MaxEnemySpawnPoint").transform.position;
-
+      Vector3 enemyDeadLinePosition = GameObject.Find("EnemyDeadLine").transform.position;
+  
       float howManySpawners = 8;
       float positionStep = (maxEnemySpawnerPosition.x - minEnemySpawnerPosition.x) / howManySpawners;
 
       for (int i = 0; i <= howManySpawners; i++)
       {
-        _gameFactory.CreateEnemySpawner(minEnemySpawnerPosition + new Vector3(positionStep * i, 0, 0));
+        Vector3 spawnerPosition = minEnemySpawnerPosition + new Vector3(positionStep * i, 0, 0);
+        _gameFactory.CreateEnemySpawner(spawnerPosition, enemyDeadLinePosition);
       }
     }
   }

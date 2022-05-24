@@ -2,7 +2,9 @@ using System.Collections.Generic;
 using CodeBase.Infrastructure.AssetManagement;
 using CodeBase.Logic.Enemy;
 using CodeBase.Logic.Player;
+using CodeBase.Services.Input;
 using CodeBase.Services.PersistentProgress;
+using CodeBase.Services.SharedData;
 using UnityEngine;
 
 namespace CodeBase.Infrastructure.Factory
@@ -12,30 +14,42 @@ namespace CodeBase.Infrastructure.Factory
     public List<ISavedProgressReader> ProgressReaders { get; } = new List<ISavedProgressReader>();
     public List<ISavedProgress> ProgressWriters { get; } = new List<ISavedProgress>();
     public List<EnemySpawner> EnemySpawners { get; } = new List<EnemySpawner>();
-    
     public List<AttackTower> AttackTowers { get; }= new List<AttackTower>();
+    
 
     private readonly IAssetProvider _assets;
     private readonly IPersistentProgressService _persistentProgressService;
-    
+    private readonly ISharedDataService _sharedDataService;
+    private readonly IInputService _inputService;
+
     private const string PlayerExplosionLayerName = "PlayerExplosion";
     private const string EnemyExplosionLayerName = "EnemyExplosion";
     
-    public GameFactory(IAssetProvider assets, IPersistentProgressService persistentProgressService)
+    public GameFactory(IAssetProvider assets, 
+      IPersistentProgressService persistentProgressService, 
+      ISharedDataService sharedDataService,
+      IInputService inputService)
     {
       _assets = assets;
       _persistentProgressService = persistentProgressService;
+      _sharedDataService = sharedDataService;
+      _inputService = inputService;
     }
 
-    public AttackTowerManager CreateAttackTowerManager() => 
-      _assets.Instantiate(AssetPath.AttackTowerManagerPath).GetComponent<AttackTowerManager>();
+    public AttackTowerManager CreateAttackTowerManager()
+    {
+      AttackTowerManager attackTowerManager = _assets.Instantiate(AssetPath.AttackTowerManagerPath)
+        .GetComponent<AttackTowerManager>();
+      attackTowerManager.Construct(this, _inputService, _sharedDataService.SharedData.TowersData);
+      return attackTowerManager;
+    }
 
-    public AttackTower CreateAttackTower(Vector3 at)
+    public AttackTower CreateAttackTower(Vector3 at, int towerId)
     {
       AttackTower attackTower = _assets.Instantiate(path: AssetPath.AttackTowerPath, at: at)
         .GetComponent<AttackTower>();
       AttackTowers.Add(attackTower);
-      attackTower.Construct(this);
+      attackTower.Construct(this, towerId);
       return attackTower;
     }
 
@@ -60,15 +74,15 @@ namespace CodeBase.Infrastructure.Factory
       return enemyExplosion.GetComponent<Explosion>();
     }
 
-    public EnemySpawner CreateEnemySpawner(Vector3 at)
+    public EnemySpawner CreateEnemySpawner(Vector3 at, Vector3 deadLinePosition)
     {
       EnemySpawner enemySpawner = _assets.Instantiate(path: AssetPath.EnemySpawnerPath, at: at)
         .GetComponent<EnemySpawner>();
-      enemySpawner.Construct(this);
+      enemySpawner.Construct(this, deadLinePosition, _sharedDataService);
       EnemySpawners.Add(enemySpawner);
       return enemySpawner;
     }
-    public EnemyBody CreateEnemy(Vector3 at) =>
+    public EnemyBody CreateEnemy(Vector3 at, Vector3 deadLinePosition) =>
       _assets.Instantiate(path: AssetPath.EnemyPath, at: at)
         .GetComponent<EnemyBody>();
 

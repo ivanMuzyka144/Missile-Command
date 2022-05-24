@@ -6,11 +6,12 @@ namespace CodeBase.Services.Input
 {
   public interface IInputService : IService
   {
-    Vector2 Axis { get; }
-
     event Action<Vector2> OnMouseMoved;
     event Action<Vector2> OnMouseClicked;
+
+    void SetBorder(Vector3 borderPosition);
     void RecordMousePosition();
     void RecordMouseCLicked();
+    
   }
 }

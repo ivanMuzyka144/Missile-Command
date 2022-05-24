@@ -10,17 +10,18 @@ namespace CodeBase.Logic.Player
    {
       [SerializeField] private Transform _firePoint;
       [SerializeField] private Transform _canonTransform;
-
+      public int TowerId { get; private set; }
+      
       private IGameFactory _factory;
-      private IInputService _inputService;
 
       private float _reloadTime = 0.25f;
       private bool _canFire;
-   
-   
-      public void Construct(IGameFactory factory)
+
+
+      public void Construct(IGameFactory factory, int towerId)
       {
          _factory = factory;
+         TowerId = towerId;
          _canFire = true;
       }
       
