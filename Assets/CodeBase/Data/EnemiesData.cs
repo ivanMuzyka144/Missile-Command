@@ -1,8 +1,29 @@
+using System;
+
 namespace CodeBase.Data
 {
   public class EnemiesData
   {
-    public int EnemiesCount;
-    public int KilledEnemies;
+    public int EnemiesCount { get; private set; }
+    public int KilledEnemies { get; private set; }
+
+    public Action OnEnemyDestroyed;
+
+    public void SetupEnemiesCount(int enemiesCount)
+    {
+      EnemiesCount = enemiesCount;
+      KilledEnemies = 0;
+    }
+
+    public void RecordEnemyKilledByPlayer()
+    {
+      KilledEnemies++;
+    }
+
+    public void RecordEnemyDestroyed()
+    {
+      EnemiesCount--;
+      OnEnemyDestroyed?.Invoke();
+    }
   }
 }

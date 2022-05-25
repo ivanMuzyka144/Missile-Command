@@ -83,7 +83,7 @@ namespace CodeBase.Infrastructure.Factory
     {
       EnemySpawner enemySpawner = _assets.Instantiate(path: AssetPath.EnemySpawnerPath, at: at)
         .GetComponent<EnemySpawner>();
-      enemySpawner.Construct(this, deadLinePosition, _sharedDataService);
+      enemySpawner.Construct(this, deadLinePosition, _sharedDataService.SharedData.EnemiesData);
       EnemySpawners.Add(enemySpawner);
       return enemySpawner;
     }

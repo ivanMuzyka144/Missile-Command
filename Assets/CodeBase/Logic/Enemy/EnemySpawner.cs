@@ -1,3 +1,4 @@
+using CodeBase.Data;
 using CodeBase.Infrastructure.Factory;
 using CodeBase.Services.SharedData;
 using UnityEngine;
@@ -9,19 +10,20 @@ namespace CodeBase.Logic.Enemy
     private IGameFactory _factory;
     private ISharedDataService _sharedDataService;
     private Vector3 _deadLinePosition;
+    private EnemiesData _enemiesData;
 
-    public void Construct(IGameFactory factory, Vector3 deadLinePosition, ISharedDataService sharedDataService)
+    public void Construct(IGameFactory factory, Vector3 deadLinePosition, EnemiesData enemiesData)
     {
       _factory = factory;
-      _sharedDataService = sharedDataService;
       _deadLinePosition = deadLinePosition;
+      _enemiesData = enemiesData;
     }
     public void SpawnEnemy()
     {
       EnemyBody enemyBody = _factory.CreateEnemy(transform.position, _deadLinePosition);
       Vector3 rotationVector = new Vector3(0, 0, 180 + Random.Range(-10,10));
       Vector3 directionVector = GetDirectionVector(rotationVector);
-      enemyBody.Construct(_factory,directionVector, _deadLinePosition, _sharedDataService);
+      enemyBody.Construct(_factory,directionVector, _deadLinePosition, _enemiesData);
       enemyBody.transform.eulerAngles = rotationVector;
     }
 

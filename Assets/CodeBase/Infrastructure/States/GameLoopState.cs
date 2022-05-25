@@ -2,6 +2,7 @@
 using CodeBase.Infrastructure.Factory;
 using CodeBase.Logic.Enemy;
 using CodeBase.Services.Input;
+using CodeBase.Services.SharedData;
 using DG.Tweening;
 using UnityEngine;
 
@@ -12,12 +13,20 @@ namespace CodeBase.Infrastructure.States
     private readonly GameStateMachine _stateMachine;
     private readonly IInputService _inputService;
     private readonly IGameFactory _factory;
+    private readonly ISharedDataService _sharedDataService;
 
-    public GameLoopState(GameStateMachine stateMachine, IInputService inputService, IGameFactory factory)
+    private bool _shouldRecordInput;
+    public GameLoopState(GameStateMachine stateMachine, 
+      IInputService inputService, 
+      IGameFactory factory, 
+      ISharedDataService sharedDataService)
     {
       _stateMachine = stateMachine;
       _inputService = inputService;
       _factory = factory;
+      _sharedDataService = sharedDataService;
+
+      _shouldRecordInput = true;
     }
 
     public void Enter()
@@ -30,6 +39,14 @@ namespace CodeBase.Infrastructure.States
 
     public void Tick()
     {
+      if(_shouldRecordInput)
+        RecordInput();
+
+      CheckLevelResult();
+    }
+
+    private void RecordInput()
+    {
       _inputService.RecordMousePosition();
       _inputService.RecordMouseCLicked();
     }
@@ -38,6 +55,8 @@ namespace CodeBase.Infrastructure.States
     {
       Sequence spawnSequence = DOTween.Sequence();
       int howMany = 10;
+      
+      _sharedDataService.SharedData.EnemiesData.SetupEnemiesCount(howMany);
 
       for (int i = 0; i < howMany; i++)
       {
@@ -50,6 +69,12 @@ namespace CodeBase.Infrastructure.States
     {
       EnemySpawner randomSpawner = _factory.EnemySpawners.RandomItem();
       randomSpawner.SpawnEnemy();
+    }
+
+    private void CheckLevelResult()
+    {
+      if(_sharedDataService.SharedData.EnemiesData.EnemiesCount == 0)
+        Debug.Log("NO ENEMIES!");
     }
   }
 }

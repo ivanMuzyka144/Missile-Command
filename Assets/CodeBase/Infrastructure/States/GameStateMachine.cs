@@ -6,6 +6,7 @@ using CodeBase.Services;
 using CodeBase.Services.Input;
 using CodeBase.Services.PersistentProgress;
 using CodeBase.Services.SaveLoad;
+using CodeBase.Services.SharedData;
 
 namespace CodeBase.Infrastructure.States
 {
@@ -22,7 +23,9 @@ namespace CodeBase.Infrastructure.States
         [typeof(LoadLevelState)] = new LoadLevelState(this, sceneLoader, services.Single<IGameFactory>(), 
           services.Single<IPersistentProgressService>(), services.Single<IInputService>()),
         [typeof(LoadProgressState)] = new LoadProgressState(this, services.Single<IPersistentProgressService>(), services.Single<ISaveLoadService>()),
-        [typeof(GameLoopState)] = new GameLoopState(this, services.Single<IInputService>(), services.Single<IGameFactory>()),
+        [typeof(GameLoopState)] = new GameLoopState(this, services.Single<IInputService>(), 
+          services.Single<IGameFactory>(), 
+          services.Single<ISharedDataService>()),
       };
     }
     

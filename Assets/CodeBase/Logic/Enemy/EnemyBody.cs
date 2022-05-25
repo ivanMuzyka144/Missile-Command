@@ -1,4 +1,5 @@
 using System;
+using CodeBase.Data;
 using CodeBase.Infrastructure.Factory;
 using CodeBase.Logic.Player;
 using CodeBase.Services.SharedData;
@@ -11,19 +12,19 @@ namespace CodeBase.Logic.Enemy
     [SerializeField] private float _velocity;
 
     private IGameFactory _factory;
-    private ISharedDataService _sharedDataService;
+    private EnemiesData _enemiesData;
     
     private Vector2 _direction;
     private Vector3 _deadLinePosition;
     private bool _setup;
 
     public void Construct(IGameFactory factory, Vector2 direction, 
-      Vector3 deadLinePosition, ISharedDataService sharedDataService)
+      Vector3 deadLinePosition, EnemiesData enemiesData)
     {
       _factory = factory;
       _direction = direction;
       _deadLinePosition = deadLinePosition;
-      _sharedDataService = sharedDataService;
+      _enemiesData = enemiesData;
       _setup = true;
     }
     private void Update()
@@ -57,8 +58,16 @@ namespace CodeBase.Logic.Enemy
       DestroyEnemy();
     }
 
-    public void Hit() => DestroyEnemy();
+    public void Hit()
+    {
+      _enemiesData.RecordEnemyKilledByPlayer();
+      DestroyEnemy();
+    }
 
-    private void DestroyEnemy() => Destroy(gameObject);
+    private void DestroyEnemy()
+    {
+      _enemiesData.RecordEnemyDestroyed();
+      Destroy(gameObject);
+    }
   }
 }

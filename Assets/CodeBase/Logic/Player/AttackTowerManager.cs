@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using CodeBase.Data;
 using CodeBase.Infrastructure.Factory;
 using CodeBase.Services.Input;
@@ -11,6 +12,7 @@ namespace CodeBase.Logic.Player
     private IGameFactory _factory;
     private IInputService _inputService;
     private TowersData _towersData;
+
 
     public void Construct(IGameFactory factory, IInputService inputService, TowersData towersData)
     {
@@ -36,8 +38,11 @@ namespace CodeBase.Logic.Player
     private void MouseClicked(Vector2 mousePosition)
     {
       AttackTower tower = GetAvailableTower(mousePosition.FromScreenToWorld());
-      _towersData.RemoveAmmo(tower.TowerId);
-      tower.Shoot(mousePosition);
+      if (tower != null)
+      {
+        _towersData.RemoveAmmo(tower.TowerId);
+        tower.Shoot(mousePosition);
+      }
     }
 
     private AttackTower GetAvailableTower(Vector2 position)
@@ -45,6 +50,33 @@ namespace CodeBase.Logic.Player
       float nearDistance = 0;
       AttackTower returnTower= null;
 
+      AttackTower[] towersWithAmmo = _factory.AttackTowers.Where(x => _towersData.GetTowerAmmo(x.TowerId) > 0).ToArray();
+
+      if (towersWithAmmo.Length == 0)
+      {
+        return null;
+      }
+      
+      for (var i = 0; i < towersWithAmmo.Length; i++)
+      {
+        AttackTower attackTower = towersWithAmmo[i];
+        float distance = Vector2.Distance(position, attackTower.transform.position);
+        if (i == 0)
+        {
+          nearDistance = distance;
+          returnTower = attackTower;
+        }
+        else
+        {
+          if (nearDistance > distance)
+          {
+            nearDistance = distance;
+            returnTower = attackTower;
+          }
+        }
+      }
+
+/*
       for (int i = 0; i < _factory.AttackTowers.Count; i++)
       {
         AttackTower tower = _factory.AttackTowers[i];
@@ -62,7 +94,7 @@ namespace CodeBase.Logic.Player
             returnTower = tower;
           }
         }
-      }
+      }*/
       return returnTower;
     }
 
