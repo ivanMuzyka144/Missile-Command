@@ -36,6 +36,7 @@ namespace CodeBase.Logic.Player
     private void MouseClicked(Vector2 mousePosition)
     {
       AttackTower tower = GetAvailableTower(mousePosition.FromScreenToWorld());
+      _towersData.RemoveAmmo(tower.TowerId);
       tower.Shoot(mousePosition);
     }
 
@@ -67,12 +68,9 @@ namespace CodeBase.Logic.Player
 
     public void SetupTowers(Vector3[] towerPositions)
     {
-      int ammoCount = 20;
-      
       for (int i = 0; i < towerPositions.Length; i++)
       {
         AttackTower attackTower = _factory.CreateAttackTower(towerPositions[i], i);
-        _towersData.AddTower(i, ammoCount);
       }
     }
     

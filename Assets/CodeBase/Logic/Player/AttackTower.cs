@@ -10,7 +10,9 @@ namespace CodeBase.Logic.Player
    {
       [SerializeField] private Transform _firePoint;
       [SerializeField] private Transform _canonTransform;
+      [SerializeField] private AmmunitionPresenter _ammunitionPresenter;
       public int TowerId { get; private set; }
+      public AmmunitionPresenter AmmunitionPresenter => _ammunitionPresenter; 
       
       private IGameFactory _factory;
 

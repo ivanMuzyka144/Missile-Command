@@ -8,7 +8,7 @@ namespace CodeBase.Data
   {
     private readonly Dictionary<int, int> _towerAmmoDict = new Dictionary<int, int>();
 
-    public Action<int> OnTowerAmmoChanged;
+    public Action<int,int> OnTowerAmmoChanged;
     public void AddTower(int towerId, int ammoCount) => 
       _towerAmmoDict.Add(towerId, ammoCount);
 
@@ -16,7 +16,7 @@ namespace CodeBase.Data
     {
       int currAmmo = _towerAmmoDict[towerId];
       _towerAmmoDict[towerId] = currAmmo - 1;
-      OnTowerAmmoChanged?.Invoke(towerId);
+      OnTowerAmmoChanged?.Invoke(towerId, _towerAmmoDict[towerId]);
     }
 
     public bool IsTowerHasAmmo(int towerId) => 

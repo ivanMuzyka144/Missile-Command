@@ -35,7 +35,7 @@ namespace CodeBase.Infrastructure.States
     private void RegisterServices()
     {
       _services.RegisterSingle<IInputService>(new InputService());
-      _services.RegisterSingle<ISharedDataService>(new SharedDataService());
+      _services.RegisterSingle(SharedDataService());
       _services.RegisterSingle<IStaticDataService>(new StaticDataService());
       _services.RegisterSingle<IAssetProvider>(new AssetProvider());
       _services.RegisterSingle<IPersistentProgressService>(new PersistentProgressService());
@@ -48,5 +48,11 @@ namespace CodeBase.Infrastructure.States
     private void EnterLoadLevel() =>
       _stateMachine.Enter<LoadProgressState>();
     
+    private ISharedDataService SharedDataService()
+    {
+      ISharedDataService sharedDataService = new SharedDataService();
+      sharedDataService.SharedData = new GameSharedData();
+      return sharedDataService;
+    }
   }
 }

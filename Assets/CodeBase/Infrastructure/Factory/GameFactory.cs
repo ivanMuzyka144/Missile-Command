@@ -49,7 +49,12 @@ namespace CodeBase.Infrastructure.Factory
       AttackTower attackTower = _assets.Instantiate(path: AssetPath.AttackTowerPath, at: at)
         .GetComponent<AttackTower>();
       AttackTowers.Add(attackTower);
+
+      int ammmmmo = 10;
+      _sharedDataService.SharedData.TowersData.AddTower(towerId, 10);
       attackTower.Construct(this, towerId);
+      attackTower.GetComponent<AmmunitionPresenter>().Construct(towerId, _sharedDataService.SharedData.TowersData);
+
       return attackTower;
     }
 
