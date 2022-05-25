@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.VisualScripting;
 
 namespace CodeBase.Data
@@ -24,5 +25,15 @@ namespace CodeBase.Data
 
     public int GetTowerAmmo(int towerId) => 
       _towerAmmoDict[towerId];
+
+    public bool IsAmmoEnded()
+    {
+      int allAmmo = 0;
+
+      foreach (int ammo in _towerAmmoDict.Values) 
+        allAmmo += ammo;
+
+      return allAmmo == 0;
+    }
   }
 }

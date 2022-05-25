@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using CodeBase.Infrastructure.AssetManagement;
 using CodeBase.Logic.Enemy;
@@ -14,8 +15,11 @@ namespace CodeBase.Infrastructure.Factory
     public List<ISavedProgressReader> ProgressReaders { get; } = new List<ISavedProgressReader>();
     public List<ISavedProgress> ProgressWriters { get; } = new List<ISavedProgress>();
     public List<EnemySpawner> EnemySpawners { get; } = new List<EnemySpawner>();
-    public List<AttackTower> AttackTowers { get; }= new List<AttackTower>();
+    public List<AttackTower> AttackTowers { get; } = new List<AttackTower>();
     
+    public List<PlayerHouse> PlayerHouses { get; } = new List<PlayerHouse>();
+    public event Action OnAmmoEnded;
+    public event Action OnHousesDestroyed;
 
     private readonly IAssetProvider _assets;
     private readonly IPersistentProgressService _persistentProgressService;
@@ -68,9 +72,10 @@ namespace CodeBase.Infrastructure.Factory
 
     public Explosion CreatePlayerExplosion(Vector3 at)
     {
-      GameObject playerExplosion = _assets.Instantiate(path: AssetPath.ExplosionPath, at: at);
-      playerExplosion.layer = LayerMask.NameToLayer(PlayerExplosionLayerName);
-      return playerExplosion.GetComponent<Explosion>();
+      Explosion playerExplosion = _assets.Instantiate(path: AssetPath.ExplosionPath, at: at).GetComponent<Explosion>();
+      playerExplosion.gameObject.layer = LayerMask.NameToLayer(PlayerExplosionLayerName);
+      playerExplosion.OnExplosionEnded += CheckIsAmmoEnded;
+      return playerExplosion;
     }
     public Explosion CreateEnemyExplosion(Vector3 at)
     {
@@ -91,9 +96,29 @@ namespace CodeBase.Infrastructure.Factory
       _assets.Instantiate(path: AssetPath.EnemyPath, at: at)
         .GetComponent<EnemyBody>();
 
-    public PlayerHouse CreatePlayerHouse(Vector3 at) =>
-      _assets.Instantiate(path: AssetPath.PlayerHousePath, at: at)
+    public PlayerHouse CreatePlayerHouse(Vector3 at)
+    {
+      PlayerHouse playerHouse = _assets.Instantiate(path: AssetPath.PlayerHousePath, at: at)
         .GetComponent<PlayerHouse>();
+      playerHouse.Construct(this);
+      PlayerHouses.Add(playerHouse);
+      return playerHouse;
+    }
+
+    public void DestroyPlayerHouse(PlayerHouse playerHouse)
+    {
+      PlayerHouses.Remove(playerHouse);
+      GameObject.Destroy(playerHouse.gameObject);
+      
+      if (PlayerHouses.Count == 0) 
+        OnHousesDestroyed?.Invoke();
+    }
+
+    private void CheckIsAmmoEnded()
+    {
+      if (_sharedDataService.SharedData.TowersData.IsAmmoEnded()) 
+        OnAmmoEnded?.Invoke();
+    }
 
     public void Register(ISavedProgressReader progressReader)
     {
@@ -122,7 +147,7 @@ namespace CodeBase.Infrastructure.Factory
     {
       GameObject gameObject = _assets.Instantiate(path: prefabPath);
       RegisterProgressWatchers(gameObject);
-
+      
       return gameObject;
     }
 

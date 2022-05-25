@@ -26,6 +26,10 @@ namespace CodeBase.Infrastructure.States
       _factory = factory;
       _sharedDataService = sharedDataService;
 
+      _factory.OnAmmoEnded += HandleAmmoEnded;
+      _factory.OnHousesDestroyed += HandlePlayerHousesDestroyed;
+      _sharedDataService.SharedData.EnemiesData.OnAllEnemiesDestroyed += HandleAllEnemiesDestroyed;
+    
       _shouldRecordInput = true;
     }
 
@@ -42,7 +46,6 @@ namespace CodeBase.Infrastructure.States
       if(_shouldRecordInput)
         RecordInput();
 
-      CheckLevelResult();
     }
 
     private void RecordInput()
@@ -71,10 +74,19 @@ namespace CodeBase.Infrastructure.States
       randomSpawner.SpawnEnemy();
     }
 
-    private void CheckLevelResult()
+    private void HandleAmmoEnded()
     {
-      if(_sharedDataService.SharedData.EnemiesData.EnemiesCount == 0)
-        Debug.Log("NO ENEMIES!");
+      Debug.Log("Ammo ended!");
+    }
+
+    private void HandlePlayerHousesDestroyed()
+    {
+      Debug.Log("PlayerHousesDestroyed");
+    }
+
+    private void HandleAllEnemiesDestroyed()
+    {
+      Debug.Log("AllEnemiesDestroyed");
     }
   }
 }

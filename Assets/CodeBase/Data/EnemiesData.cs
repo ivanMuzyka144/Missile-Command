@@ -7,7 +7,7 @@ namespace CodeBase.Data
     public int EnemiesCount { get; private set; }
     public int KilledEnemies { get; private set; }
 
-    public Action OnEnemyDestroyed;
+    public Action OnAllEnemiesDestroyed;
 
     public void SetupEnemiesCount(int enemiesCount)
     {
@@ -23,7 +23,8 @@ namespace CodeBase.Data
     public void RecordEnemyDestroyed()
     {
       EnemiesCount--;
-      OnEnemyDestroyed?.Invoke();
+      if(EnemiesCount == 0)
+        OnAllEnemiesDestroyed?.Invoke();
     }
   }
 }

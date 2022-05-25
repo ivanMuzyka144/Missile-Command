@@ -1,3 +1,4 @@
+using System;
 using CodeBase.Logic.Enemy;
 using DG.Tweening;
 using DG.Tweening.Core;
@@ -16,7 +17,8 @@ namespace CodeBase.Logic.Player
     [Space(10)]
     [SerializeField] private Color _finishColor;
     [SerializeField] private SpriteRenderer _spriteRenderer;
-    
+
+    public Action OnExplosionEnded;
     public void PerformExplosion()
     {
       transform.localScale = Vector3.zero;
@@ -43,6 +45,8 @@ namespace CodeBase.Logic.Player
 
     private void DestroyExplosion()
     {
+      OnExplosionEnded?.Invoke();
+
       _spriteRenderer.DOKill();
       transform.DOKill();
       Destroy(gameObject);
