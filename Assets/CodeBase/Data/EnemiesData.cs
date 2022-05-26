@@ -26,5 +26,11 @@ namespace CodeBase.Data
       if(EnemiesCount == 0)
         OnAllEnemiesDestroyed?.Invoke();
     }
+
+    public void Clear()
+    {
+      EnemiesCount = 0;
+      KilledEnemies = 0;
+    }
   }
 }

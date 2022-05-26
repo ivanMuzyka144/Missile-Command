@@ -10,5 +10,11 @@ namespace CodeBase.Data
       EnemiesData = new EnemiesData();
       TowersData = new TowersData();
     }
+
+    public void Clear()
+    {
+      EnemiesData.Clear();
+      TowersData.Clear();
+    }
   }
 }

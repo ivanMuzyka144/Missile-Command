@@ -5,6 +5,7 @@ using CodeBase.Logic.Player;
 using CodeBase.Services;
 using CodeBase.Services.PersistentProgress;
 using CodeBase.StaticData;
+using CodeBase.UI;
 using Unity.VisualScripting;
 using UnityEngine;
 

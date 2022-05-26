@@ -6,17 +6,18 @@ using CodeBase.Logic.Player;
 using CodeBase.Services.Input;
 using CodeBase.Services.PersistentProgress;
 using CodeBase.Services.SharedData;
+using CodeBase.UI;
 using UnityEngine;
+using IDisposable = CodeBase.Services.IDisposable;
 
 namespace CodeBase.Infrastructure.Factory
 {
-  public class GameFactory : IGameFactory
+  public class GameFactory : IGameFactory, IDisposable
   {
     public List<ISavedProgressReader> ProgressReaders { get; } = new List<ISavedProgressReader>();
     public List<ISavedProgress> ProgressWriters { get; } = new List<ISavedProgress>();
     public List<EnemySpawner> EnemySpawners { get; } = new List<EnemySpawner>();
     public List<AttackTower> AttackTowers { get; } = new List<AttackTower>();
-    
     public List<PlayerHouse> PlayerHouses { get; } = new List<PlayerHouse>();
     public event Action OnAmmoEnded;
     public event Action OnHousesDestroyed;
@@ -25,7 +26,6 @@ namespace CodeBase.Infrastructure.Factory
     private readonly IPersistentProgressService _persistentProgressService;
     private readonly ISharedDataService _sharedDataService;
     private readonly IInputService _inputService;
-
     private const string PlayerExplosionLayerName = "PlayerExplosion";
     private const string EnemyExplosionLayerName = "EnemyExplosion";
     
@@ -130,9 +130,22 @@ namespace CodeBase.Infrastructure.Factory
 
     public void Cleanup()
     {
+      for (int i = 0; i < EnemySpawners.Count; i++) 
+        GameObject.Destroy(EnemySpawners[i].gameObject);
+      
+      for (int i = 0; i < AttackTowers.Count; i++) 
+        GameObject.Destroy(AttackTowers[i].gameObject);
+      
+      for (int i = 0; i < PlayerHouses.Count; i++) 
+        GameObject.Destroy(PlayerHouses[i].gameObject);
+
       ProgressReaders.Clear();
       ProgressWriters.Clear();
       EnemySpawners.Clear();
+      AttackTowers.Clear();
+      PlayerHouses.Clear();
+      OnAmmoEnded = null;
+      OnHousesDestroyed = null;
     }
 
     private GameObject InstantiateRegistered(string prefabPath, Vector3 at)
@@ -156,5 +169,8 @@ namespace CodeBase.Infrastructure.Factory
       foreach (ISavedProgressReader progressReader in gameObject.GetComponentsInChildren<ISavedProgressReader>())
         Register(progressReader);
     }
+
+    public void Dispose() => 
+      Cleanup();
   }
 }

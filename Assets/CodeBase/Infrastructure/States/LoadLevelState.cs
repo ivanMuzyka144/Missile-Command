@@ -6,6 +6,9 @@ using CodeBase.Logic;
 using CodeBase.Logic.Player;
 using CodeBase.Services.Input;
 using CodeBase.Services.PersistentProgress;
+using CodeBase.Services.StaticData;
+using CodeBase.UI.Factory;
+using CodeBase.UI.Services;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -21,15 +24,25 @@ namespace CodeBase.Infrastructure.States
     private readonly IGameFactory _gameFactory;
     private readonly IPersistentProgressService _progressService;
     private readonly IInputService _inputService;
+    private readonly IUiFactory _uiFactory;
+    private readonly IStaticDataService _staticDataService;
+    private readonly IWindowService _windowService;
 
-    public LoadLevelState(GameStateMachine gameStateMachine, SceneLoader sceneLoader, 
-      IGameFactory gameFactory, IPersistentProgressService progressService, IInputService inputService)
+    public LoadLevelState(GameStateMachine gameStateMachine, 
+      SceneLoader sceneLoader, 
+      IGameFactory gameFactory, 
+      IPersistentProgressService progressService, 
+      IInputService inputService, 
+      IUiFactory uiFactory,
+      IStaticDataService staticDataService)
     {
       _stateMachine = gameStateMachine;
       _sceneLoader = sceneLoader;
       _gameFactory = gameFactory;
       _progressService = progressService;
       _inputService = inputService;
+      _uiFactory = uiFactory;
+      _staticDataService = staticDataService;
     }
 
     public void Enter(string sceneName)
@@ -42,12 +55,17 @@ namespace CodeBase.Infrastructure.States
 
     private void OnLoaded()
     {
+      LoadStaticData();
       SetBorderToInputService();
       InitGameWorld();
       InformProgressReaders();
 
       _stateMachine.Enter<GameLoopState>();
     }
+
+    private void LoadStaticData() => 
+      _staticDataService.Load();
+
 
     private void SetBorderToInputService()
     {
@@ -63,10 +81,14 @@ namespace CodeBase.Infrastructure.States
 
     private void InitGameWorld()
     {
+      CreateUIRoot();
       CreateAttackTowerManager();
       CreatePlayerHouses();
       CreateEnemySpawners();
     }
+
+    private void CreateUIRoot() => 
+      _uiFactory.CreateUIRoot();
 
     private void CreatePlayerHouses()
     {

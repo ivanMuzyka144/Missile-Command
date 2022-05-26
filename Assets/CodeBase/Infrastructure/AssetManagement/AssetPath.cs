@@ -9,5 +9,6 @@ namespace CodeBase.Infrastructure.AssetManagement
     public const string EnemyPath = "Gameplay/Enemy";
     public const string PlayerHousePath = "Gameplay/PlayerHouse";
     public const string AttackTowerManagerPath = "Gameplay/AttackTowerManager";
+    public const string UIManagerPath = "UI/UIManager";
   }
 }

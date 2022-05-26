@@ -35,5 +35,10 @@ namespace CodeBase.Data
 
       return allAmmo == 0;
     }
+
+    public void Clear()
+    {
+      _towerAmmoDict.Clear();
+    }
   }
 }
