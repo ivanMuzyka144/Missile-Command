@@ -28,7 +28,7 @@ namespace CodeBase.Infrastructure.Factory
     Explosion CreateEnemyExplosion(Vector3 at);
     EnemySpawner CreateEnemySpawner(Vector3 at, Vector3 deadLinePosition);
     EnemyBody CreateEnemy(Vector3 at, Vector3 deadLinePosition);
-    PlayerHouse CreatePlayerHouse(Vector3 at);
+    PlayerHouse CreatePlayerHouse(int houseId ,Vector3 at);
     void DestroyPlayerHouse(PlayerHouse playerHouse);
   }
 }

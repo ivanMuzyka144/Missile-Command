@@ -96,11 +96,11 @@ namespace CodeBase.Infrastructure.Factory
       _assets.Instantiate(path: AssetPath.EnemyPath, at: at)
         .GetComponent<EnemyBody>();
 
-    public PlayerHouse CreatePlayerHouse(Vector3 at)
+    public PlayerHouse CreatePlayerHouse(int houseId, Vector3 at)
     {
       PlayerHouse playerHouse = _assets.Instantiate(path: AssetPath.PlayerHousePath, at: at)
         .GetComponent<PlayerHouse>();
-      playerHouse.Construct(this);
+      playerHouse.Construct(houseId,this);
       PlayerHouses.Add(playerHouse);
       return playerHouse;
     }
@@ -108,6 +108,7 @@ namespace CodeBase.Infrastructure.Factory
     public void DestroyPlayerHouse(PlayerHouse playerHouse)
     {
       PlayerHouses.Remove(playerHouse);
+      _sharedDataService.SharedData.HouseDataDictionary.DestroyHouse(playerHouse.HouseId);
       GameObject.Destroy(playerHouse.gameObject);
       
       if (PlayerHouses.Count == 0) 
@@ -120,14 +121,7 @@ namespace CodeBase.Infrastructure.Factory
         OnAmmoEnded?.Invoke();
     }
 
-    public void Register(ISavedProgressReader progressReader)
-    {
-      if (progressReader is ISavedProgress progressWriter)
-        ProgressWriters.Add(progressWriter);
-
-      ProgressReaders.Add(progressReader);
-    }
-
+    
     public void Cleanup()
     {
       for (int i = 0; i < EnemySpawners.Count; i++) 
@@ -147,29 +141,6 @@ namespace CodeBase.Infrastructure.Factory
       OnAmmoEnded = null;
       OnHousesDestroyed = null;
     }
-
-    private GameObject InstantiateRegistered(string prefabPath, Vector3 at)
-    {
-      GameObject gameObject = _assets.Instantiate(path: prefabPath, at: at);
-      RegisterProgressWatchers(gameObject);
-
-      return gameObject;
-    }
-
-    private GameObject InstantiateRegistered(string prefabPath)
-    {
-      GameObject gameObject = _assets.Instantiate(path: prefabPath);
-      RegisterProgressWatchers(gameObject);
-      
-      return gameObject;
-    }
-
-    private void RegisterProgressWatchers(GameObject gameObject)
-    {
-      foreach (ISavedProgressReader progressReader in gameObject.GetComponentsInChildren<ISavedProgressReader>())
-        Register(progressReader);
-    }
-
     public void Dispose() => 
       Cleanup();
   }

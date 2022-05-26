@@ -23,7 +23,7 @@ namespace CodeBase.UI.Services
         case WindowId.LevelCompleted:
           return _uiFactory.CreateLevelCompletedWindow();
         case WindowId.GameOver:
-          return _uiFactory.CreateLevelCompletedWindow();
+          return _uiFactory.CreateGameOverWindow();
       }
       return null;
     }

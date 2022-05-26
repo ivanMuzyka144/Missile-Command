@@ -38,7 +38,8 @@ namespace CodeBase.Data
 
     public void Clear()
     {
-      _towerAmmoDict.Clear();
+      if (_towerAmmoDict != null) 
+        _towerAmmoDict.Clear();
     }
   }
 }

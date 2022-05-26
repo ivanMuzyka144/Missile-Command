@@ -7,8 +7,6 @@ namespace CodeBase.Infrastructure.States
 {
   public class LoadProgressState : IState
   {
-    private const string MainSceneName = "Main";
-    
     private readonly GameStateMachine _gameStateMachine;
     private readonly IPersistentProgressService _progressService;
     private readonly ISaveLoadService _saveLoadProgress;
@@ -24,7 +22,7 @@ namespace CodeBase.Infrastructure.States
     {
       LoadProgressOrInitNew();
       
-      _gameStateMachine.Enter<LoadLevelState, string>(MainSceneName);
+      _gameStateMachine.Enter<LoadSharedDataState>();
     }
 
     public void Exit()
@@ -41,9 +39,8 @@ namespace CodeBase.Infrastructure.States
     private PlayerProgress NewProgress()
     {
       var progress =  new PlayerProgress();
-
+      //Static data read about houses
       
-
       return progress;
     }
   }

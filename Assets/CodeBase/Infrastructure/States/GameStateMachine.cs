@@ -23,14 +23,21 @@ namespace CodeBase.Infrastructure.States
       _states = new Dictionary<Type, IExitableState>
       {
         [typeof(BootstrapState)] = new BootstrapState(this, sceneLoader, services),
-        [typeof(LoadLevelState)] = new LoadLevelState(this, sceneLoader, services.Single<IGameFactory>(), 
-          services.Single<IPersistentProgressService>(), services.Single<IInputService>(), services.Single<IUiFactory>(), services.Single<IStaticDataService>()),
         [typeof(LoadProgressState)] = new LoadProgressState(this, services.Single<IPersistentProgressService>(), services.Single<ISaveLoadService>()),
+        [typeof(LoadSharedDataState)] = new LoadSharedDataState(this, services.Single<ISharedDataService>(), services.Single<IPersistentProgressService>()),
+        [typeof(LoadLevelState)] = new LoadLevelState(this, sceneLoader, 
+          services.Single<IGameFactory>(), 
+          services.Single<IPersistentProgressService>(),
+          services.Single<IInputService>(), 
+          services.Single<IUiFactory>(), 
+          services.Single<IStaticDataService>(),
+          services.Single<ISharedDataService>()),
         [typeof(GameLoopState)] = new GameLoopState(this, services.Single<IInputService>(), 
           services.Single<IGameFactory>(), 
           services.Single<ISharedDataService>(),
           services.Single<IWindowService>()),
-        [typeof(DisposableState)] = new DisposableState(this, services),
+        [typeof(DisposableState)] = new DisposableState(this, services, services.Single<IPersistentProgressService>(), 
+          services.Single<ISharedDataService>(), services.Single<ISaveLoadService>()),
       };
     }
     

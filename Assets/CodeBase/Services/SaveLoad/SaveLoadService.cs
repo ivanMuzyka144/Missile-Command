@@ -18,18 +18,16 @@ namespace CodeBase.Services.SaveLoad
       _gameFactory = gameFactory;
     }
 
-    public void SaveProgress()
-    {
-      foreach (ISavedProgress progressWriter in _gameFactory.ProgressWriters)
-        progressWriter.UpdateProgress(_progressService.Progress);
-      
+    public void SaveProgress() => 
       PlayerPrefs.SetString(ProgressKey, _progressService.Progress.ToJson());
-    }
 
     public PlayerProgress LoadProgress()
     {
       return PlayerPrefs.GetString(ProgressKey)?
         .ToDeserialized<PlayerProgress>();
     }
+
+    public void ClearProgress() => 
+      PlayerPrefs.DeleteKey(ProgressKey);
   }
 }

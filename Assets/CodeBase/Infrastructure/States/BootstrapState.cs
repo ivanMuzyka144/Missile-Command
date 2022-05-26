@@ -60,6 +60,8 @@ namespace CodeBase.Infrastructure.States
     {
       ISharedDataService sharedDataService = new SharedDataService();
       sharedDataService.SharedData = new GameSharedData();
+      
+      
       return sharedDataService;
     }
 

@@ -6,6 +6,7 @@ using CodeBase.Logic;
 using CodeBase.Logic.Player;
 using CodeBase.Services.Input;
 using CodeBase.Services.PersistentProgress;
+using CodeBase.Services.SharedData;
 using CodeBase.Services.StaticData;
 using CodeBase.UI.Factory;
 using CodeBase.UI.Services;
@@ -26,6 +27,7 @@ namespace CodeBase.Infrastructure.States
     private readonly IInputService _inputService;
     private readonly IUiFactory _uiFactory;
     private readonly IStaticDataService _staticDataService;
+    private readonly ISharedDataService _sharedDataService;
     private readonly IWindowService _windowService;
 
     public LoadLevelState(GameStateMachine gameStateMachine, 
@@ -34,7 +36,8 @@ namespace CodeBase.Infrastructure.States
       IPersistentProgressService progressService, 
       IInputService inputService, 
       IUiFactory uiFactory,
-      IStaticDataService staticDataService)
+      IStaticDataService staticDataService,
+      ISharedDataService sharedDataService)
     {
       _stateMachine = gameStateMachine;
       _sceneLoader = sceneLoader;
@@ -43,6 +46,7 @@ namespace CodeBase.Infrastructure.States
       _inputService = inputService;
       _uiFactory = uiFactory;
       _staticDataService = staticDataService;
+      _sharedDataService = sharedDataService;
     }
 
     public void Enter(string sceneName)
@@ -93,10 +97,18 @@ namespace CodeBase.Infrastructure.States
     private void CreatePlayerHouses()
     {
       var spawnPositions = GameObject.FindGameObjectsWithTag("PlayerHousePoint")
-                                                       .Select(x => x.transform.position);
-      foreach (var positions in spawnPositions)
+        .Select(x => x.transform.position).ToList();
+
+      var houseDataDictionary = _sharedDataService.SharedData.HouseDataDictionary;
+      
+      for (int i = 0; i < spawnPositions.Count(); i++)
       {
-        PlayerHouse house = _gameFactory.CreatePlayerHouse(positions);
+        HouseData houseData = houseDataDictionary.HouseDataDict[i];
+        
+        if (!houseData.Destroyed)
+        {
+          PlayerHouse house = _gameFactory.CreatePlayerHouse(i, spawnPositions[i]);
+        }
       }
     }
 
